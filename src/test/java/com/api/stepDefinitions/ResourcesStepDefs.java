@@ -2,6 +2,7 @@ package com.api.stepDefinitions;
 
 import com.api.models.Resource;
 import com.api.requests.ResourceRequest;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,7 +21,9 @@ public class ResourcesStepDefs {
 
     private Response response;
 
-    private Resource resource;
+    private Resource lastResource;
+
+    private Resource newResource;
 
     @Given("there are registered resources in the system")
     public void thereAreRegisteredResourcesInTheSystem(){
@@ -54,4 +57,24 @@ public class ResourcesStepDefs {
 
     }
 
+    @Given("I retrieve the last resource")
+    public void iRetrieveTheLastResource() {
+
+        response = resourceRequest.getResources();
+        List<Resource> resources = resourceRequest.getResourcesEntity(response);
+        lastResource = resources.get(resources.size()-1);
+        
+        logger.info("Last resource retrieved: "+lastResource);
+
+    }
+
+    @When("I send a PUT request to update the last resource")
+    public void iSendAPUTRequestToUpdateTheLastResource(String json) {
+
+        newResource = resourceRequest.createFromJson(json);
+        newResource.setId(lastResource.getId());
+
+        response = resourceRequest.editResource(newResource, newResource.getId());
+        logger.info(response.getStatusCode());
+    }
 }

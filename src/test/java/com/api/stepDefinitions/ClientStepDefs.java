@@ -83,4 +83,12 @@ public class ClientStepDefs {
         Assert.assertEquals(newClient, clientFromAPI);
 
     }
+
+    @Then("validates the response with the client JSON schema")
+    public void validatesTheResponseWithTheClientJSONSchema() {
+
+        Assert.assertTrue(clientRequest.validateSchema(response, "schemas/clientSchema.json"));
+        logger.info("Schema validated successfully!");
+
+    }
 }

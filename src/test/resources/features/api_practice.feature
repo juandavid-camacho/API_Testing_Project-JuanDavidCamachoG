@@ -23,4 +23,26 @@ Feature: Testing APIs
     When I send a POST request to create a new client
     Then the response should have a status code 201
     And the response should include the details of the new client
+    And validates the response with the client JSON schema
+
+  @smoke
+  Scenario: Update the last resource
+    Given there are registered resources in the system
+    And I retrieve the last resource
+    When I send a PUT request to update the last resource
+    """
+    {
+      "name":"Convertible Car",
+      "trademark":"Juan",
+      "stock":10000,
+      "price":11.19,
+      "description":"This is a description",
+      "tags":"auto",
+      "is_active":true
+    }
+    """
+    Then the response should have status code 200
+    #And the response should have the following details
+      #| name             | trademark | stock | price | description           | tags | is_active |
+      #| Convertible Car  | Juan      | 10000 | 11.19 | This is a description | auto | True      |
     #And validates the response with the client JSON schema

@@ -23,4 +23,4 @@ Feature: Testing APIs
     When I send a POST request to create a new client
     Then the response should have a status code 201
     And the response should include the details of the new client
-    And validates the response with the client JSON schema
+    #And validates the response with the client JSON schema

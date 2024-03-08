@@ -42,7 +42,7 @@ public class ResourcesStepDefs {
     @Then("the response should have status code {int}")
     public void theResponseShouldHaveAStatusCode(int statusCode){
 
-        Assert.assertEquals(statusCode, 200);
+        Assert.assertEquals(statusCode, response.statusCode());
 
     }
 

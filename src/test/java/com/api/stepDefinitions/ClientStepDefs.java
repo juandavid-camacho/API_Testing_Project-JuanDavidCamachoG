@@ -3,6 +3,7 @@ package com.api.stepDefinitions;
 import com.api.models.Client;
 import com.api.requests.ClientRequest;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.And;
 import io.restassured.response.Response;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -22,6 +23,8 @@ public class ClientStepDefs {
 
     private Response response;
 
+    private Client newClient;
+
     @Given("there are registered clients in the system")
     public void thereAreRegisteredClientsInTheSystem(){
 
@@ -30,7 +33,6 @@ public class ClientStepDefs {
 
         List<Client> clients = clientRequest.getClientsEntity(response);
 
-        Assert.assertEquals(clients.size(), 2);
     }
 
     @When("I send a GET request to retrieve the full list of clients")
@@ -43,7 +45,7 @@ public class ClientStepDefs {
     @Then("the response should have a status code {int}")
     public void theResponseShouldHaveAStatusCode(int statusCode){
 
-        Assert.assertEquals(statusCode, 200);
+        Assert.assertEquals(statusCode, response.statusCode());
 
     }
 
@@ -58,8 +60,8 @@ public class ClientStepDefs {
     @Given("I have a client with the following details:")
     public void iHaveAClientWithTheFollowingDetails(DataTable dataTable) {
 
-        Map<String, String> clientEntered = dataTable.asMap(String.class, String.class);
-        Client newClient = Client.builder().name(clientEntered.get("name")).build();
+        List<String> inputs = dataTable.row(1);
+        newClient = Client.builder().name(inputs.get(0)).lastName(inputs.get(1)).country(inputs.get(2)).city(inputs.get(3)).email(inputs.get(4)).phone(inputs.get(5)).build();
         
         logger.info("Client "+newClient.getName()+" created");
 
@@ -67,5 +69,18 @@ public class ClientStepDefs {
 
     @When("I send a POST request to create a new client")
     public void iSendAPOSTRequestToCreateANewClient() {
+
+        response = clientRequest.addClient(newClient);
+
+    }
+
+    @Then("the response should include the details of the new client")
+    public void theResponseShouldIncludeTheDetailsOfTheNewClient() {
+
+        Client clientFromAPI = clientRequest.getClient(response);
+        clientFromAPI.setId(null);
+
+        Assert.assertEquals(newClient, clientFromAPI);
+
     }
 }

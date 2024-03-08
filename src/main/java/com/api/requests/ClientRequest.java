@@ -10,11 +10,10 @@ import java.util.List;
 
 public class ClientRequest extends BaseRequest{
 
-    private String endpoint;
+    private String endpoint = Constants.BASE_URL.concat(Constants.CLIENTS_URL);;
 
     public Response getClients(){
 
-        endpoint = Constants.BASE_URL.concat(Constants.CLIENTS_URL);
         return requestGET(endpoint, createBaseHeaders());
 
     }
@@ -28,7 +27,13 @@ public class ClientRequest extends BaseRequest{
 
     public Response addClient(Client client){
 
-        
+        return requestPOST(endpoint, createBaseHeaders(), client);
+
+    }
+
+    public Client getClient(Response response){
+
+        return response.as(Client.class);
 
     }
 

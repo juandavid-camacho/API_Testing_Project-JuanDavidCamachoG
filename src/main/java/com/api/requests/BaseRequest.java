@@ -18,13 +18,13 @@ public class BaseRequest {
 
     protected Response requestPOST(String endpoint, Map<String, ?> headers, Object body){
 
-        return RestAssured.given().contentType(Constants.VALUE_CONTENT_TYPE).headers(headers).body(body).when().get(endpoint);
+        return RestAssured.given().contentType(Constants.VALUE_CONTENT_TYPE).headers(headers).body(body).when().post(endpoint);
 
     }
 
     protected Response requestPUT(String endpoint, Map<String, ?> headers, Object body){
 
-        return RestAssured.given().contentType(Constants.VALUE_CONTENT_TYPE).headers(headers).body(body).when().get(endpoint);
+        return RestAssured.given().contentType(Constants.VALUE_CONTENT_TYPE).headers(headers).body(body).when().put(endpoint);
 
     }
 

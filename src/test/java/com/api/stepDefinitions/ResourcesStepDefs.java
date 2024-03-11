@@ -25,13 +25,31 @@ public class ResourcesStepDefs {
 
     private Resource newResource;
 
-    @Given("there are registered resources in the system")
-    public void thereAreRegisteredResourcesInTheSystem(){
+    @Given("there are at least {int} registered resources in the system")
+    public void thereAreRegisteredResourcesInTheSystem(int condition){
 
         response = resourceRequest.getResources();
         logger.info(response.jsonPath().prettify());
 
         List<Resource> resources = resourceRequest.getResourcesEntity(response);
+
+        if (resources.size() < condition) {
+
+            int difference = condition - resources.size();
+            logger.info("There are not enough resources in the system to meet the condition ("+condition+"), now adding "+difference+"...");
+
+            for (int i = 0; i < difference; i++) {
+
+                response =resourceRequest.addNewResource();
+                Assert.assertEquals(201, response.statusCode());
+                logger.info("Added "+(i+1)+" resource(s) with status code: "+response.statusCode());
+
+            }
+
+            response =resourceRequest.getResources();
+            logger.info(response.jsonPath().prettify());
+
+        }
 
     }
 
@@ -39,6 +57,7 @@ public class ResourcesStepDefs {
     public void iSendAGETRequestToRetrieveTheFullListOfResources(){
 
         response = resourceRequest.getResources();
+        logger.info("Full list of resources retrieved successfully!");
 
     }
 
@@ -46,6 +65,7 @@ public class ResourcesStepDefs {
     public void theResponseShouldHaveAStatusCode(int statusCode){
 
         Assert.assertEquals(statusCode, response.statusCode());
+        logger.info("Status code: "+response.statusCode());
 
     }
 
@@ -75,15 +95,18 @@ public class ResourcesStepDefs {
         newResource.setId(lastResource.getId());
 
         response = resourceRequest.editResource(newResource, newResource.getId());
+        logger.info("PUT request sent successfully!");
     }
 
     @Then("the response should have the following details")
     public void theResponseShouldHaveTheFollowingDetails(DataTable dataTable) {
 
+        Resource updatedResourceFromAPI = resourceRequest.getResource(response);
+
         List<String> details = dataTable.row(1);
         Resource detailsToCompare = Resource.builder().name(details.get(0)).trademark(details.get(1)).stock(Integer.parseInt(details.get(2))).price(Float.parseFloat(details.get(3))).description(details.get(4)).tags(details.get(5)).active(Boolean.valueOf(details.get(6))).id(lastResource.getId()).build();
 
-        Assert.assertEquals(newResource, detailsToCompare);
+        Assert.assertEquals(detailsToCompare, updatedResourceFromAPI);
         logger.info("The response contains the details provided!");
 
     }

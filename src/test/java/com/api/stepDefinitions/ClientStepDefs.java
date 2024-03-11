@@ -25,13 +25,31 @@ public class ClientStepDefs {
 
     private Client newClient;
 
-    @Given("there are registered clients in the system")
-    public void thereAreRegisteredClientsInTheSystem(){
+    @Given("there are at least {int} registered clients in the system")
+    public void thereAreRegisteredClientsInTheSystem(int condition){
 
         response = clientRequest.getClients();
         logger.info(response.jsonPath().prettify());
 
         List<Client> clients = clientRequest.getClientsEntity(response);
+
+        if (clients.size() < condition) {
+
+            int difference = condition - clients.size();
+            logger.info("There are not enough clients in the system to meet the condition ("+condition+"), now adding "+difference+"...");
+
+            for (int i = 0; i < difference; i++) {
+
+                response = clientRequest.addNewClient();
+                Assert.assertEquals(201, response.statusCode());
+                logger.info("Added "+(i+1)+" client(s) with status code: "+response.statusCode());
+
+            }
+
+            response = clientRequest.getClients();
+            logger.info(response.jsonPath().prettify());
+
+        }
 
     }
 
@@ -39,6 +57,7 @@ public class ClientStepDefs {
     public void iSendAGETRequestToRetrieveTheFullListOfClients(){
 
         response = clientRequest.getClients();
+        logger.info("Full list of clients retrieved successfully!");
 
     }
 
@@ -46,6 +65,7 @@ public class ClientStepDefs {
     public void theResponseShouldHaveAStatusCode(int statusCode){
 
         Assert.assertEquals(statusCode, response.statusCode());
+        logger.info("Status code: "+response.statusCode());
 
     }
 
@@ -71,6 +91,7 @@ public class ClientStepDefs {
     public void iSendAPOSTRequestToCreateANewClient() {
 
         response = clientRequest.addClient(newClient);
+        logger.info("POST request sent successfully!");
 
     }
 
@@ -81,6 +102,7 @@ public class ClientStepDefs {
         clientFromAPI.setId(null);
 
         Assert.assertEquals(newClient, clientFromAPI);
+        logger.info("The response contains the details of the new client");
 
     }
 

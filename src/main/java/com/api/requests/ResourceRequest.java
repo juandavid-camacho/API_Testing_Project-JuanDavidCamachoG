@@ -38,4 +38,16 @@ public class ResourceRequest extends BaseRequest{
 
     }
 
+    public Resource getResource(Response response){
+
+        return response.as(Resource.class);
+
+    }
+
+    public Response addNewResource(){
+
+        return requestEmptyPOST(endpoint, createBaseHeaders());
+
+    }
+
 }

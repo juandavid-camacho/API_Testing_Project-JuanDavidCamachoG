@@ -31,6 +31,12 @@ public class ClientRequest extends BaseRequest{
 
     }
 
+    public Response addNewClient(){
+
+        return requestEmptyPOST(endpoint, createBaseHeaders());
+
+    }
+
     public Client getClient(Response response){
 
         return response.as(Client.class);

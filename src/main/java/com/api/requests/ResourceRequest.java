@@ -25,6 +25,12 @@ public class ResourceRequest extends BaseRequest{
 
     }
 
+    /**
+     * This method does a PUT to edit a specific resource
+     * @param resource the resource created with fields already updated to the new ones
+     * @param idToEdit id of the resource to edit, used for the endpoint to point at the correct resource
+     * @return the response of the PUT
+     */
     public Response editResource(Resource resource, String idToEdit){
 
         return requestPUT(endpoint.concat("/"+idToEdit), createBaseHeaders(), resource);

@@ -33,6 +33,7 @@ public class ClientStepDefs {
 
         List<Client> clients = clientRequest.getClientsEntity(response);
 
+        //This if statement aims to comply with the condition that there must be at least 3 clients in the system
         if (clients.size() < condition) {
 
             int difference = condition - clients.size();
@@ -92,9 +93,14 @@ public class ClientStepDefs {
 
         response = clientRequest.addClient(newClient);
         logger.info("POST request sent successfully!");
+        logger.info(response.jsonPath().prettify());
 
     }
 
+    /**
+     * This method creates a client based on the response obtained in order to
+     * compare it to the client that should have been inserted (newClient)
+     */
     @Then("the response should include the details of the new client")
     public void theResponseShouldIncludeTheDetailsOfTheNewClient() {
 

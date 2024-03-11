@@ -22,6 +22,12 @@ public class BaseRequest {
 
     }
 
+    /**
+     * This is a POST method with an empty body in order for a new entity to be created by default with its parameters
+     * @param endpoint endpoint URL
+     * @param headers headers for the POST
+     * @return the response to the POST
+     */
     protected Response requestEmptyPOST(String endpoint, Map<String, ?> headers){
 
         return RestAssured.given().contentType(Constants.VALUE_CONTENT_TYPE).headers(headers).when().post(endpoint);
@@ -42,6 +48,7 @@ public class BaseRequest {
 
     }
 
+    //This method was created here in order to reuse it in both ClientRequest and ResourceRequest
     public boolean validateSchema(Response response, String path){
 
         try {

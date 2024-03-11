@@ -33,6 +33,7 @@ public class ResourcesStepDefs {
 
         List<Resource> resources = resourceRequest.getResourcesEntity(response);
 
+        //This if statement aims to comply with the condition that there must be at least 5 resources in the system
         if (resources.size() < condition) {
 
             int difference = condition - resources.size();
@@ -98,6 +99,10 @@ public class ResourcesStepDefs {
         logger.info("PUT request sent successfully!");
     }
 
+    /**
+     * This method creates a resource based on the response obtained in order to
+     * compare it to the fields of the resource that should have been updated
+     */
     @Then("the response should have the following details")
     public void theResponseShouldHaveTheFollowingDetails(DataTable dataTable) {
 

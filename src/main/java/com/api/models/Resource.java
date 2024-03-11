@@ -24,7 +24,7 @@ public class Resource {
 
     private String tags;
 
-    private Boolean is_active;
+    private Boolean active;
 
     private String id;
 

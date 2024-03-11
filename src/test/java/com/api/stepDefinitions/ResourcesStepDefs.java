@@ -2,7 +2,7 @@ package com.api.stepDefinitions;
 
 import com.api.models.Resource;
 import com.api.requests.ResourceRequest;
-import io.cucumber.java.en.And;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -75,6 +75,24 @@ public class ResourcesStepDefs {
         newResource.setId(lastResource.getId());
 
         response = resourceRequest.editResource(newResource, newResource.getId());
-        logger.info(response.getStatusCode());
+    }
+
+    @Then("the response should have the following details")
+    public void theResponseShouldHaveTheFollowingDetails(DataTable dataTable) {
+
+        List<String> details = dataTable.row(1);
+        Resource detailsToCompare = Resource.builder().name(details.get(0)).trademark(details.get(1)).stock(Integer.parseInt(details.get(2))).price(Float.parseFloat(details.get(3))).description(details.get(4)).tags(details.get(5)).active(Boolean.valueOf(details.get(6))).id(lastResource.getId()).build();
+
+        Assert.assertEquals(newResource, detailsToCompare);
+        logger.info("The response contains the details provided!");
+
+    }
+
+    @Then("validates the response with the resource JSON schema")
+    public void validatesTheResponseWithTheResourceJSONSchema() {
+
+        Assert.assertTrue(resourceRequest.validateSchema(response, "schemas/resourceSchema.json"));
+        logger.info("Schema validated successfully!");
+
     }
 }

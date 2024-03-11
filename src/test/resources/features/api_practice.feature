@@ -34,15 +34,15 @@ Feature: Testing APIs
     {
       "name":"Convertible Car",
       "trademark":"Juan",
-      "stock":10000,
-      "price":11.19,
+      "stock":1000,
+      "price":99.99,
       "description":"This is a description",
       "tags":"auto",
-      "is_active":true
+      "active":true
     }
     """
     Then the response should have status code 200
-    #And the response should have the following details
-      #| name             | trademark | stock | price | description           | tags | is_active |
-      #| Convertible Car  | Juan      | 10000 | 11.19 | This is a description | auto | True      |
-    #And validates the response with the client JSON schema
+    And the response should have the following details
+      | name             | trademark | stock | price | description           | tags | active |
+      | Convertible Car  | Juan      | 1000  | 99.99 | This is a description | auto | True   |
+    And validates the response with the resource JSON schema
